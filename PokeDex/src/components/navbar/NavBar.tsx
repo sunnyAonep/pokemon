@@ -17,18 +17,17 @@ export default function NavBar({ onSearch}: Props) {
   };
 
   return (
-    <nav className='flex bg-slate-300 shadow-xl items-center justify-around w-[70%] h-[10%] rounded-b-md'>
-      <img src={reactIvcon} alt="React Icon" className='h-[50%]' />
+    <nav className='flex bg-[#cc1919] shadow-xl items-center justify-center gap-5 w-[20%] h-20 rounded-lg'>
       <input
         type="text"
         placeholder='Put the Pokémon name'
         value={search}
         onChange={handleChange}
-        className='h-[70%] text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent'
+        className='h-[70%] text-gray-700 bg-[#ffffff] border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent'
       />
       <button
         onClick={handleSearch}
-        className="bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 active:bg-blue-700 transition duration-150 ease-in-out"
+        className="bg-[#000000] text-white font-semibold py-2 px-4 rounded shadow-lg"
       >
         Search
       </button>
