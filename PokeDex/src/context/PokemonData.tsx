@@ -45,7 +45,7 @@ const PokemonData: React.FC<PokemonDataProps> = ({ children }) => {
 
   const getRandomPokemon = async () => {
     try {
-      const randomId = Math.floor(Math.random() * 898) + 1;
+      const randomId = Math.floor(Math.random() * 660) + 1;
       const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
       return res.data;
     } catch (error) {

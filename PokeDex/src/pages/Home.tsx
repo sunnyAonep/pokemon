@@ -96,18 +96,15 @@ export default function Home() {
         alt="Pokédex Icon"
         className=" max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
       />
-      <div className="flex flex-col w-[90%] h-40 items-center justify-center">
-        <div className="flex flex-wrap justify-around w-[90%]  h-[100%] items-center text-center gap-4">
-          <div className="md:flex justify-center items-center w-[30%] transform -rotate-12 hidden sm:block">
-            <PokemonCardTitle />
-          </div>
-          <div className="flex justify-center items-center w-[30%] ">
-            <PokemonCardTitle />
-          </div>
-          <div className="md:flex justify-center w-[30%] transform rotate-12 hidden sm:block">
-            <PokemonCardTitle />
-          </div>
-        </div>
+      <div className="flex flex-wrap justify-around w-full h-full items-center text-center gap-4">
+       {[...Array(5)].map((_, index) => (
+      <div 
+        key={index}
+        className={`flex justify-center items-center w-[30%] ${index === 0 ? 'transform -rotate-12 hidden sm:block' : index === 4 ? 'transform rotate-12 hidden sm:block' : ''}`}
+      >
+        <PokemonCardTitle />
+      </div>
+       ))}
       </div>
       <NavBar onSearch={handleSearch} />
       <h1 className="w-[80%] text-2xl font-semibold text-left ">
