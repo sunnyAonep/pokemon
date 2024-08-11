@@ -32,6 +32,9 @@ export default function Home() {
     setSearchTerm(term);
     setCurrentPage(1);
   };
+  console.log('====================================');
+  console.log(selectedPokemon);
+  console.log('====================================');
 
   useEffect(() => {
     if (data) {
@@ -156,10 +159,13 @@ export default function Home() {
             name: selectedPokemon.name,
             number: selectedPokemon.id,
             image: selectedPokemon.sprites.front_default,
-            info: `Height: ${selectedPokemon.height} | Weight: ${selectedPokemon.weight}`,
+            height: selectedPokemon.height,
+            weight: selectedPokemon.weight,
             types: selectedPokemon.types.map(
               (typeInfo: any) => typeInfo.type.name
             ),
+            stats: selectedPokemon.stats,
+            gif: selectedPokemon.sprites.other.showdown.front_default
           }}
           onClose={handleClosePopup}
         />
