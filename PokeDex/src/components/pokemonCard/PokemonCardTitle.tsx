@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { PokeContext } from '../../context/PokemonData';
-import pokeball from '../../assets/pokeball.png';
+import pokeball from '../../assets/imgs/pokeball.png';
 
 const PokemonCardTitle: React.FC = () => {
   const { getRandomPokemon }: any = useContext(PokeContext) || {};

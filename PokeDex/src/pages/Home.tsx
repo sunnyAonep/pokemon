@@ -14,7 +14,8 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPokemon, setSelectedPokemon] = useState<any>(null);
-
+  ;
+  
   const { data, isError } = useQuery({
     queryKey: ["pokemon", searchTerm],
     queryFn: () =>
@@ -26,15 +27,13 @@ export default function Home() {
             .then((res) => res.data)
         : null,
     placeholderData: null,
+  
   });
-
+   console.log(data)
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
   };
-  console.log('====================================');
-  console.log(selectedPokemon);
-  console.log('====================================');
 
   useEffect(() => {
     if (data) {
@@ -103,7 +102,7 @@ export default function Home() {
        {[...Array(5)].map((_, index) => (
       <div 
         key={index}
-        className={`flex justify-center items-center w-[30%] ${index === 0 ? 'transform -rotate-12 hidden sm:block' : index === 4 ? 'transform rotate-12 hidden sm:block' : ''}`}
+        className={`flex justify-center items-center w-[30%] ${index === 0 ? 'transform hidden sm:block' : index === 4 ? 'transform hidden sm:block' : ''}`}
       >
         <PokemonCardTitle />
       </div>
