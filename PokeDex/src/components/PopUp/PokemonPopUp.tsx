@@ -11,6 +11,7 @@ type PokemonPopUpProps = {
     types: string[];
     stats: { stat: { name: string }, base_stat: number }[];
     gif?: string;
+    moves: {move: {name:string} , };
   };
   onClose: () => void;
 };

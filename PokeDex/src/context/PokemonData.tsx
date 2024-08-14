@@ -10,6 +10,8 @@ interface PokemonContextType {
   pokemonData: Pokemon[];
   handlePageChange: (page: number) => void;
   getPokemonData: (url: string) => Promise<any>;
+  getPokemons: (offset: number, type?: string) => Promise<void>;
+  count: number;
 }
 
 interface PokemonDataProps {
@@ -23,24 +25,41 @@ const PokemonData: React.FC<PokemonDataProps> = ({ children }) => {
   const [pagination, setPagination] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
 
-  const getPokemons = async (offset: number) => {
-    try {
-      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`);
-      setPokemonData(res.data.results);
-      setCount(res.data.count);
-    } catch (error) {
-      console.error('Error fetching Pokemon data:', error);
+  const getPokemons = async (offset: number, type?: string) => {
+    if (type) {
+      try {
+        const res = await axios.get(`https://pokeapi.co/api/v2/type/${type}`);
+        const pokemons = res.data.pokemon.map((p: { pokemon: { name: string; url: string } }) => p.pokemon);
+        setPokemonData(pokemons);
+        setCount(pokemons.length); 
+      } catch (error) {
+        console.error('Error fetching Pokémon data by type:', error);
+      }
+    } else {
+      try {
+        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`);
+        setPokemonData(res.data.results);
+        setCount(res.data.count);
+      } catch (error) {
+        console.error('Error fetching Pokémon data:', error);
+      }
     }
   };
 
-  const getPokemonData = async (url: string) => {
-    try {
-      const res = await axios.get(url);
-      return res.data;
-    } catch (error) {
-      console.error('Error fetching Pokemon data:', error);
-      return null; 
+  const getPokemonData = async (url: string, type?: string) => {
+    if (url) {
+      try {
+        const res = await axios.get(url);
+        if (type && !res.data.types.some((t: { type: { name: string } }) => t.type.name === type)) {
+          return null;
+        }
+        return res.data;
+      } catch (error) {
+        console.error('Error fetching Pokémon data:', error);
+        return null;
+      }
     }
+    return null;
   };
 
   const getRandomPokemon = async () => {
@@ -50,7 +69,7 @@ const PokemonData: React.FC<PokemonDataProps> = ({ children }) => {
       return res.data;
     } catch (error) {
       console.error('Error fetching random Pokémon data:', error);
-      return null; 
+      return null;
     }
   };
 
@@ -68,7 +87,8 @@ const PokemonData: React.FC<PokemonDataProps> = ({ children }) => {
     pokemonData,
     handlePageChange,
     getPokemonData,
-    count
+    count,
+    getPokemons
   };
 
   return (

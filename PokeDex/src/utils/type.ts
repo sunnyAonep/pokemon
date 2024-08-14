@@ -12,7 +12,6 @@ export const PokemonsTypes = [
     { type: "psychic", color: "#F85888" },  
     { type: "ground", color: "#E0C068" },  
     { type: "dragon", color: "#7038F8" },  
-    { type: "reset", color: "#FFFFFF" },  
 ];
 
 export const getTypeColor = (type: string) => {

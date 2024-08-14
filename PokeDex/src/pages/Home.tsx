@@ -8,32 +8,26 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import PokemonPopUp from "../components/PopUp/PokemonPopUp";
 import { handleNextPage, handlePreviousPage } from "../utils/pagination";
+import { PokemonsTypes, getTypeColor } from "../utils/type";
 
 export default function Home() {
-  const { pokemonData, handlePageChange, count }: any = useContext(PokeContext);
+  const { pokemonData, handlePageChange, count, getPokemons } = useContext<any>(PokeContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPokemon, setSelectedPokemon] = useState<any>(null);
-  ;
-  
+  const [selectedType, setSelectedType] = useState<string>("");
+
   const { data, isError } = useQuery({
     queryKey: ["pokemon", searchTerm],
     queryFn: () =>
       searchTerm
         ? axios
-            .get(
-              `https://pokeapi.co/api/v2/pokemon/${searchTerm.toLowerCase()}`
-            )
+            .get(`https://pokeapi.co/api/v2/pokemon/${searchTerm.toLowerCase()}`)
             .then((res) => res.data)
         : null,
     placeholderData: null,
-  
+    enabled: !!searchTerm,  // Only run if searchTerm is not empty
   });
-   console.log(data)
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    setCurrentPage(1);
-  };
 
   useEffect(() => {
     if (data) {
@@ -42,12 +36,53 @@ export default function Home() {
     if (isError) {
       alert("Enter a valid Pokémon name");
     }
-  }, [data]);
+  }, [data, isError]);
+
+  useEffect(() => {
+    getPokemons(currentPage * 20 - 20, selectedType);
+  }, [selectedType]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
 
   const handlePageClick = (page: number) => {
     setCurrentPage(page);
     handlePageChange(page);
   };
+
+  const handleTypeChange = (type: string) => {
+    setSelectedType(type);
+    setCurrentPage(1);
+  };
+
+  const typeSelector = () => (
+    <div className="flex flex-wrap gap-4 justify-center mb-4">
+      {PokemonsTypes.map(({ type, color }) => (
+        <button
+          key={type}
+          onClick={() => handleTypeChange(type)}
+          className={`px-4 py-2 text-white rounded-full transition-colors duration-150 ease-in-out ${
+            selectedType === type ? 'bg-gray-700' : ''
+          }`}
+          style={{
+            backgroundColor: selectedType === type ? '#4A4A4A' : getTypeColor(type),
+          }}
+        >
+          {type.charAt(0).toUpperCase() + type.slice(1)}
+        </button>
+      ))}
+      <button
+        onClick={() => handleTypeChange('')}
+        className={`px-4 py-2 text-white rounded-full transition-colors duration-150 ease-in-out ${
+          !selectedType ? 'bg-gray-700' : 'bg-gray-300'
+        }`}
+      >
+        All
+      </button>
+    </div>
+  );
 
   const renderPageNumbers = () => {
     const totalPages = Math.ceil(count / 20);
@@ -60,7 +95,7 @@ export default function Home() {
       }
     );
 
-    return(
+    return (
       <div className='flex gap-2 w-[35%] h-[100%]'>
         {pageNumbers.map((page) => (
           <button
@@ -80,7 +115,6 @@ export default function Home() {
         ))}
       </div>
     );
-  
   };
 
   const handlePokemonClick = (pokemon: any) => {
@@ -99,19 +133,20 @@ export default function Home() {
         className=" max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
       />
       <div className="flex flex-wrap justify-around w-full h-full items-center text-center gap-4">
-       {[...Array(5)].map((_, index) => (
-      <div 
-        key={index}
-        className={`flex justify-center items-center w-[30%] ${index === 0 ? 'transform hidden sm:block' : index === 4 ? 'transform hidden sm:block' : ''}`}
-      >
-        <PokemonCardTitle />
-      </div>
-       ))}
+        {[...Array(5)].map((_, index) => (
+          <div 
+            key={index}
+            className={`flex justify-center items-center w-[30%] ${index === 0 ? 'transform hidden sm:block' : index === 4 ? 'transform hidden sm:block' : ''}`}
+          >
+            <PokemonCardTitle />
+          </div>
+        ))}
       </div>
       <NavBar onSearch={handleSearch} />
       <h1 className="w-[80%] text-2xl font-semibold text-left ">
         Pokémons:
       </h1>
+      {typeSelector()}
       <div className="flex md:flex-raw justify-center items-center gap-4 h-10 w-full">
         <button
           className="bg-red-500 text-white text-sm md:h-10 md:w-16 h-[80%] w-[15%] font-bold rounded-full shadow-lg hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 active:bg-red-700 transition duration-150 ease-in-out"
@@ -164,7 +199,8 @@ export default function Home() {
               (typeInfo: any) => typeInfo.type.name
             ),
             stats: selectedPokemon.stats,
-            gif: selectedPokemon.sprites.other.showdown.front_default
+            gif: selectedPokemon.sprites.other.showdown.front_default,
+            moves: selectedPokemon.moves,
           }}
           onClose={handleClosePopup}
         />
