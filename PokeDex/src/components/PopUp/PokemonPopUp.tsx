@@ -18,7 +18,6 @@ type PokemonPopUpProps = {
 
 export default function PokemonPopUp({ data, onClose }: PokemonPopUpProps) {
   const [playgif , setPlayGif] = useState<boolean>(false)
-  console.log(data);
   return (
 <div
   className="fixed z-10 inset-0 bg-slate-500 bg-opacity-35 flex items-center justify-center"
